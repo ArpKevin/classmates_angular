@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ClassmatesApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>Classmates alkalmazás</title>
+    <style>
+        td, th{
+            padding: 10px;
+            border: 1px solid black;
+        }
+        tr:nth-child(odd) {
+            background-color: lightgrey;
+        }
+        tr:first-child {
+            background-color: grey;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" ng-controller="ClassmatesController">
+        <h1>{{title}}</h1>
+
+        <input type="text" placeholder="Osztálytárs keresése..." id="mezo" ng-model="keresett">
+        <br>
+        <br>
+        <table>
+            <tr>
+                <th>Sorszám</th>
+                <th>Név</th>
+                <th>Lakhely</th>
+                <th>Hobbi</th>
+            </tr>
+            <tr ng-repeat="classmate in classmates | filter: {nev: keresett}">
+                <td>{{$index + 1}}</td>
+                <td>{{classmate.nev}}</td>
+                <td>{{classmate.lakhely}}</td>
+                <td>{{classmate.hobbi}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        let app = angular.module('ClassmatesApp', []);
+        app.controller('ClassmatesController', function($scope, $http){
+            $scope.title = "Osztálytársak";
+            
+            $scope.classmates = [];
+            $http.get("classmates.json")
+                .then(function(response){
+                    $scope.classmates = response.data;
+                })
+        })
+    </script>
+</body>
+</html>
